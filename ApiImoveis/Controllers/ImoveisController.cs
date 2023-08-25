@@ -30,7 +30,7 @@ namespace ApiImoveis.Controllers
                     }
                     else
                     {
-                        return new JsonResult(new { success = true, imovel = "0 agendamentos na lista" });
+                        return new JsonResult(new { success = true, imovel = "0 imoveis na lista" });
                     }
 
                 }
@@ -71,7 +71,7 @@ namespace ApiImoveis.Controllers
                 {
                     Imoveis imoveis = new Imoveis();
                     DBConsulta consulta = new DBConsulta();
-                    imoveis = consulta.GetCidade(bairro);
+                    imoveis = consulta.GetBairro(bairro);
                     Log.Save("Dados pegos com sucesso com o bairro");
                     return new JsonResult(new { success = true, data = imoveis });
 
@@ -92,7 +92,7 @@ namespace ApiImoveis.Controllers
                 {
                     Imoveis imoveis = new Imoveis();
                     DBConsulta consulta = new DBConsulta();
-                    imoveis = consulta.GetCidade(tipo);
+                    imoveis = consulta.GetTipo(tipo);
                     Log.Save("Dados pegos com sucesso com o tipo");
                     return new JsonResult(new { success = true, data = imoveis });
 

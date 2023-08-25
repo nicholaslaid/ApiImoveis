@@ -54,7 +54,7 @@ namespace ApiImoveis.DataBase
                 using (NpgsqlCommand cmd = new NpgsqlCommand())
                 {
                     cmd.CommandText = @"SELECT * FROM imoveis " +
-                                      @"WHERE cidade = LIKE '@cidade %';";
+                                      @"WHERE cidade LIKE '%" + cidade + "%'";
 
                     cmd.Parameters.AddWithValue("@cidade", cidade);
 
@@ -96,7 +96,7 @@ namespace ApiImoveis.DataBase
                 using (NpgsqlCommand cmd = new NpgsqlCommand())
                 {
                     cmd.CommandText = @"SELECT * FROM imoveis " +
-                                      @"WHERE bairro = @bairro;";
+                                      @"WHERE cidade LIKE '%" + bairro + "%'";
 
                     cmd.Parameters.AddWithValue("@bairro", bairro);
 
