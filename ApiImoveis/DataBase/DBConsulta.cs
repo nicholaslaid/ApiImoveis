@@ -43,7 +43,7 @@ namespace ApiImoveis.DataBase
         }
 
 
-        public Imoveis GetCidade(string cidade)
+        public Imoveis GetCidade(string cidade) 
         {
 
             Imoveis imoveis = new Imoveis();
