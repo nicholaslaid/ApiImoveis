@@ -42,7 +42,46 @@ namespace ApiImoveis.DataBase
             return result;
         }
 
+        public Imoveis Get(int id)
+        {
 
+            Imoveis imoveis = new Imoveis();
+            DataBaseAccess dba = new DataBaseAccess();
+
+            try
+            {
+                using (NpgsqlCommand cmd = new NpgsqlCommand())
+                {
+                    cmd.CommandText = @"SELECT * FROM imoveis " +
+                                      @"WHERE id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (cmd.Connection = dba.OpenConnection())
+                    using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            imoveis.id = Convert.ToInt32(reader["id"]);
+                            imoveis.cidade = reader["cidade"].ToString();
+                            imoveis.bairro = reader["bairro"].ToString();
+                            imoveis.value = float.Parse(reader["valor"].ToString());
+                            imoveis.qtd_de_quartos = Convert.ToInt32(reader["qtd_de_quartos"]);
+                            imoveis.qtd_de_vagas = Convert.ToInt32(reader["qtd_de_quartos"]);
+                            imoveis.qtd_de_banheiros = Convert.ToInt32(reader["qtd_de_quartos"]);
+                            imoveis.qtd_de_salas = Convert.ToInt32(reader["qtd_de_quartos"]);
+                            imoveis.type = reader["tipo"].ToString();
+
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return imoveis;
+        }
         public Imoveis GetCidade(string cidade) 
         {
 

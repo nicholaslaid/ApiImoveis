@@ -4,6 +4,13 @@ namespace ApiImoveis.Global
 {
     public class Config
     {
+        public enum ErrorCode
+        {
+            UnhandledException = 1,
+            UnknownError = 2,
+            JobNotFoundError = 3
+        }
+
         //variaveis lidas do appsettings.json
         public static string fileName = string.Empty;
         public static string folderName = string.Empty;

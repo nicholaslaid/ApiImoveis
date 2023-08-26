@@ -2,6 +2,7 @@
 using ApiImoveis.Global;
 using ApiImoveis.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace ApiImoveis.Controllers
 {
@@ -15,8 +16,8 @@ namespace ApiImoveis.Controllers
 
             public JsonResult GetAll()
             {
-
-                try
+                Result result = new Result();
+            try
                 {
                     List<Imoveis> imoveis = new List<Imoveis>();
                     DBConsulta consulta = new DBConsulta();
@@ -25,9 +26,12 @@ namespace ApiImoveis.Controllers
                     if (imoveis.Count > 0)
                     {
                         Log.Save("Dados pegos com sucesso");
-                        return new JsonResult(new { success = true, imovel = imoveis });
+                    result.data = JsonConvert.SerializeObject(Config.imoveis);
+                    result.success = true;
+                  
+                      
 
-                    }
+                }
                     else
                     {
                         return new JsonResult(new { success = true, imovel = "0 imoveis na lista" });
@@ -38,6 +42,8 @@ namespace ApiImoveis.Controllers
                 {
                     return new JsonResult(new { success = false, msg = ex.Message });
                 }
+
+            return new JsonResult(result);
             }
 
             [HttpGet]
