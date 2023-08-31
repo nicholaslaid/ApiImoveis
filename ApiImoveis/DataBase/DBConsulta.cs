@@ -82,7 +82,7 @@ namespace ApiImoveis.DataBase
 
             return imoveis;
         }
-        public Imoveis GetCidade(string cidade) 
+        public Imoveis GetFilter(string filter) 
         {
 
             Imoveis imoveis = new Imoveis();
@@ -93,9 +93,10 @@ namespace ApiImoveis.DataBase
                 using (NpgsqlCommand cmd = new NpgsqlCommand())
                 {
                     cmd.CommandText = @"SELECT * FROM imoveis " +
-                                      @"WHERE cidade LIKE '%" + cidade + "%'";
+                                      @"WHERE cidade LIKE @filter " +
+                                      @"OR bairro LIKE @filter";
 
-                    cmd.Parameters.AddWithValue("@cidade", cidade);
+                    cmd.Parameters.AddWithValue("@filter", "%" + filter + "%");
 
                     using (cmd.Connection = dba.OpenConnection())
                     using (NpgsqlDataReader reader = cmd.ExecuteReader())
