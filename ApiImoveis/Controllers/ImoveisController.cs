@@ -11,43 +11,43 @@ namespace ApiImoveis.Controllers
     [Route("api/imoveis")]
     public class ImoveisController : Controller
     {
-       
-            [HttpGet]
-            [Route("GetAll")]
 
-            public JsonResult GetAll()
-            {
-                Result result = new Result();
+        [HttpGet]
+        [Route("GetAll")]
+
+        public JsonResult GetAll()
+        {
+            Result result = new Result();
             try
-                {
-                    List<Imoveis> imoveis = new List<Imoveis>();
-                    DBConsulta consulta = new DBConsulta();
-                    imoveis = consulta.GetAll();
+            {
+                List<Imoveis> imoveis = new List<Imoveis>();
+                DBConsulta consulta = new DBConsulta();
+                imoveis = consulta.GetAll();
 
-                    if (imoveis.Count > 0)
-                    {
-                        Log.Save("Dados pegos com sucesso");
+                if (imoveis.Count > 0)
+                {
+                    Log.Save("Dados pegos com sucesso");
                     result.data = JsonConvert.SerializeObject(imoveis);
                     result.success = true;
-                  
-                      
+
+
 
                 }
-                    else
-                    {
+                else
+                {
                     result.success = false;
                     result.errorCode = Convert.ToInt32(ErrorCode.JobNotFoundError);
                     result.errorMessage = ErrorCode.JobNotFoundError.ToString();
                 }
 
-                }
-                catch (Exception ex)
-                {
-                    return new JsonResult(new { success = false, msg = ex.Message });
-                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, msg = ex.Message });
+            }
 
             return new JsonResult(result);
-            }
+        }
 
 
         [HttpGet]
@@ -55,7 +55,7 @@ namespace ApiImoveis.Controllers
         public JsonResult Get(int id)
         {
             Result result = new Result();
-            
+
 
             try
             {
@@ -65,7 +65,7 @@ namespace ApiImoveis.Controllers
 
                 if (imoveis != null && imoveis.id > 0)
                 {
-                   
+
                     result.data = JsonConvert.SerializeObject(imoveis);
                     result.success = true;
                 }
@@ -90,56 +90,18 @@ namespace ApiImoveis.Controllers
         }
 
         [HttpGet]
-            [Route("GetFilter")]
-
-            public JsonResult GetFilter(string filter)
-            {
-            Result result = new Result();
-
-            try
-                {
-                    Imoveis imoveis = new Imoveis();
-                    DBConsulta consulta = new DBConsulta();
-                imoveis = consulta.GetFilter(filter);
-                if (imoveis != null && imoveis.id > 0)
-                {
-                   
-                  
-                    result.data = JsonConvert.SerializeObject(imoveis);
-                    result.success = true;
-                }
-                else
-                {
-                    result.success = false;
-                    result.errorCode = Convert.ToInt32(ErrorCode.JobNotFoundError);
-                    result.errorMessage = ErrorCode.JobNotFoundError.ToString();
-                }
-                return new JsonResult(result);
-
-            }
-                catch (Exception ex)
-                {
-                    return new JsonResult(new { success = false, data = ex.Message });
-                }
-            return new JsonResult(result);
-        }
-
-          /*  [HttpGet]
-            [Route("GetBairro")]
-
-            public JsonResult GetBairro(string bairro)
+        [Route("GetWithFilter")]
+        public JsonResult GetWithFilter(string filter = null, string search = null)
         {
             Result result = new Result();
 
             try
             {
-                Imoveis imoveis = new Imoveis();
+                List<Imoveis> imoveis = new List<Imoveis>();
                 DBConsulta consulta = new DBConsulta();
-                imoveis = consulta.GetCidade(bairro);
-                if (imoveis != null && imoveis.id > 0)
+                imoveis = consulta.GetWithFilter(filter, search);
+                if (imoveis != null && imoveis.Count > 0)
                 {
-                    
-                  
                     result.data = JsonConvert.SerializeObject(imoveis);
                     result.success = true;
                 }
@@ -149,6 +111,7 @@ namespace ApiImoveis.Controllers
                     result.errorCode = Convert.ToInt32(ErrorCode.JobNotFoundError);
                     result.errorMessage = ErrorCode.JobNotFoundError.ToString();
                 }
+
 
             }
             catch (Exception ex)
@@ -158,56 +121,21 @@ namespace ApiImoveis.Controllers
             return new JsonResult(result);
         }
 
-        */
-
-        [HttpGet]
-            [Route("GetTipo")]
-
-            public JsonResult GetTipo(string tipo)
-        {
-            Result result = new Result();
-
-            try
-            {
-                Imoveis imoveis = new Imoveis();
-                DBConsulta consulta = new DBConsulta();
-                imoveis = consulta.GetTipo(tipo);
-                if (imoveis != null && imoveis.id > 0)
-                {
-
-                    
-                    result.data = JsonConvert.SerializeObject(imoveis);
-                    result.success = true;
-                }
-                else
-                {
-                    result.success = false;
-                    result.errorCode = Convert.ToInt32(ErrorCode.JobNotFoundError);
-                    result.errorMessage = ErrorCode.JobNotFoundError.ToString();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(new { success = false, data = ex.Message });
-            }
-            return new JsonResult(result);
-        }
 
         [HttpPost]
-            [Route("Add")]
+        [Route("Add")]
 
-            public JsonResult Add(Imoveis imoveis)
-            {
+        public JsonResult Add(Imoveis imoveis)
+        {
             Result result = new Result();
-                try
-                {
+            try
+            {
 
-                    DBConsulta consulta = new DBConsulta();
-                
+                DBConsulta consulta = new DBConsulta();
+
                 imoveis.id = consulta.GetAll().Count + 1;
                 bool a = consulta.Add(imoveis);
-               
+
                 if (a)
                 {
                     Log.Save("Dados adicionados com sucesso");
@@ -219,8 +147,8 @@ namespace ApiImoveis.Controllers
                 }
 
             }
-                catch (Exception ex)
-                {
+            catch (Exception ex)
+            {
                 result.success = false;
                 result.errorCode = Convert.ToInt32(ErrorCode.UnhandledException);
                 result.errorMessage = ErrorCode.UnhandledException.ToString() + " - " + ex.Message;
@@ -229,66 +157,66 @@ namespace ApiImoveis.Controllers
         }
 
 
-            [HttpPut]
-            [Route("Update")]
+        [HttpPut]
+        [Route("Update")]
 
-            public JsonResult Update(Imoveis imoveis)
-            {
+        public JsonResult Update(Imoveis imoveis)
+        {
 
             Result result = new Result();
-                try
+            try
+            {
+                DBConsulta consulta = new DBConsulta();
+                bool resultado = consulta.Update(imoveis);
+                if (resultado)
                 {
-                    DBConsulta consulta = new DBConsulta();
-                    bool resultado = consulta.Update(imoveis);
-                    if (resultado)
-                    {
-                        Log.Save("Dados alterados com sucesso");
-                         result.success = true;
+                    Log.Save("Dados alterados com sucesso");
+                    result.success = true;
                 }
-                    else
-                    {
+                else
+                {
                     result.success = false;
                     result.errorCode = Convert.ToInt32(ErrorCode.JobNotFoundError);
                     result.errorMessage = ErrorCode.JobNotFoundError.ToString();
                 }
 
-                }
-                catch (Exception ex)
-                {
+            }
+            catch (Exception ex)
+            {
                 result.success = false;
                 result.errorCode = Convert.ToInt32(ErrorCode.UnhandledException);
                 result.errorMessage = ErrorCode.UnhandledException.ToString() + " - " + ex.Message;
             }
             return new JsonResult(result);
+        }
+
+        [HttpDelete]
+        [Route("Delete")]
+
+        public JsonResult Delete(int id)
+        {
+
+            try
+            {
+                DBConsulta consulta = new DBConsulta();
+                bool result = consulta.Delete(id);
+                if (result)
+                {
+                    Log.Save("Dados deletados com sucesso");
+                    return new JsonResult(new { success = true, msg = "imovel " + id + " excluido com sucesso" });
+                }
+                else
+                {
+                    return new JsonResult(new { success = true, msg = "Imovel não encontrado " });
+                }
             }
 
-            [HttpDelete]
-            [Route("Delete")]
 
-            public JsonResult Delete(int id)
+            catch (Exception ex)
             {
-
-                try
-                {
-                    DBConsulta consulta = new DBConsulta();
-                    bool result = consulta.Delete(id);
-                    if (result)
-                    {
-                        Log.Save("Dados deletados com sucesso");
-                        return new JsonResult(new { success = true, msg = "imovel " + id + " excluido com sucesso" });
-                    }
-                    else
-                    {
-                        return new JsonResult(new { success = true, msg = "Imovel não encontrado " });
-                    }
-                }
-
-
-                catch (Exception ex)
-                {
-                    return new JsonResult(new { success = false, msg = ex.Message });
-                }
+                return new JsonResult(new { success = false, msg = ex.Message });
             }
         }
     }
+}
 

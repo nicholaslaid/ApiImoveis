@@ -82,10 +82,10 @@ namespace ApiImoveis.DataBase
 
             return imoveis;
         }
-        public Imoveis GetFilter(string filter) 
+        public List<Imoveis> GetFilter(string filter) 
         {
 
-            Imoveis imoveis = new Imoveis();
+            List<Imoveis> result = new List<Imoveis>();
             DataBaseAccess dba = new DataBaseAccess();
 
             try
@@ -101,8 +101,10 @@ namespace ApiImoveis.DataBase
                     using (cmd.Connection = dba.OpenConnection())
                     using (NpgsqlDataReader reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read())
+                        while (reader.Read())
                         {
+                            Imoveis imoveis = new Imoveis();
+
                             imoveis.id = Convert.ToInt32(reader["id"]);
                             imoveis.cidade = reader["cidade"].ToString();
                             imoveis.bairro = reader["bairro"].ToString();
@@ -112,7 +114,8 @@ namespace ApiImoveis.DataBase
                             imoveis.qtd_de_vagas = Convert.ToInt32(reader["qtd_de_quartos"]);
                             imoveis.qtd_de_banheiros = Convert.ToInt32(reader["qtd_de_quartos"]);
                             imoveis.qtd_de_salas = Convert.ToInt32(reader["qtd_de_quartos"]);
-                            
+
+                            result.Add(imoveis);
 
 
                         }
@@ -122,9 +125,68 @@ namespace ApiImoveis.DataBase
             catch (Exception ex)
             { }
 
-            return imoveis;
+            return result;
         }
 
+        public List<Imoveis> GetWithFilter(string filter = null, string search = null)
+        {
+
+            List<Imoveis> result = new List<Imoveis>();
+            DataBaseAccess dba = new DataBaseAccess();
+
+            try
+            {
+                using (NpgsqlCommand cmd = new NpgsqlCommand())
+                {
+                    string sql = string.Empty;
+
+                    sql += @"SELECT * FROM imoveis WHERE 1 = 1 ";
+
+                    if (!string.IsNullOrEmpty(filter))
+                    {
+                        sql += @"AND tipo = @filter ";
+                        cmd.Parameters.AddWithValue("@filter", filter);
+                    }
+
+                    if (!string.IsNullOrEmpty(search))
+                    {
+                        sql += @"AND (cidade LIKE @search OR bairro LIKE @search) ";
+                        cmd.Parameters.AddWithValue("@search", "%" + search + "%");
+                    }
+
+                    cmd.CommandText = sql;
+
+                    using (cmd.Connection = dba.OpenConnection())
+                    using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Imoveis imoveis = new Imoveis();
+
+                            imoveis.id = Convert.ToInt32(reader["id"]);
+                            imoveis.cidade = reader["cidade"].ToString();
+                            imoveis.bairro = reader["bairro"].ToString();
+                            imoveis.type = reader["tipo"].ToString();
+                            imoveis.value = float.Parse(reader["valor"].ToString());
+                            imoveis.qtd_de_quartos = Convert.ToInt32(reader["qtd_de_quartos"]);
+                            imoveis.qtd_de_vagas = Convert.ToInt32(reader["qtd_de_quartos"]);
+                            imoveis.qtd_de_banheiros = Convert.ToInt32(reader["qtd_de_quartos"]);
+                            imoveis.qtd_de_salas = Convert.ToInt32(reader["qtd_de_quartos"]);
+
+                            result.Add(imoveis);
+
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            { }
+
+            return result;
+        }
+
+      
         public Imoveis GetBairro(string bairro)
         {
 
@@ -206,7 +268,8 @@ namespace ApiImoveis.DataBase
 
             return imoveis;
         }
-
+         
+        
         public List<Imoveis> GetAll()
         {
             List<Imoveis> result = new List<Imoveis>();
