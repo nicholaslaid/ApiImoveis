@@ -10,6 +10,8 @@ namespace ApiImoveis.Global
             UnknownError = 2,
             JobNotFoundError = 3
         }
+        public static string automaticToken = string.Empty;
+       
 
         //variaveis lidas do appsettings.json
         public static string fileName = string.Empty;

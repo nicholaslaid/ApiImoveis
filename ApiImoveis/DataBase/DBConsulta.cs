@@ -15,10 +15,10 @@ namespace ApiImoveis.DataBase
             {
                 using (NpgsqlCommand cmd = new NpgsqlCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO imoveis (id, cidade, bairro, tipo, valor, qtd_de_quartos, qtd_de_vagas, qtd_de_banheiros, qtd_de_salas) " +
-                                      @"VALUES (@id, @cidade, @bairro, @tipo, @valor, @qtd_de_quartos, @qtd_de_vagas, @qtd_de_banheiros, @qtd_de_salas);";
+                    cmd.CommandText = @"INSERT INTO imoveis (cidade, bairro, tipo, valor, qtd_de_quartos, qtd_de_vagas, qtd_de_banheiros, qtd_de_salas) " +
+                                      @"VALUES (@cidade, @bairro, @tipo, @valor, @qtd_de_quartos, @qtd_de_vagas, @qtd_de_banheiros, @qtd_de_salas);";
 
-                    cmd.Parameters.AddWithValue("@id", imoveis.id);
+                    
                     cmd.Parameters.AddWithValue("@cidade", imoveis.cidade);
                     cmd.Parameters.AddWithValue("@bairro", imoveis.bairro);
                     cmd.Parameters.AddWithValue("@valor", imoveis.value);
